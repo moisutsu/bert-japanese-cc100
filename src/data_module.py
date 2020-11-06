@@ -14,9 +14,8 @@ class BertJapaneseDataModule(pl.LightningDataModule):
     def __init__(
         self,
         tokenizer,
-        batch_size = 512,
-        # num_workers = os.cpu_count(),
-        num_workers = 1,
+        batch_size = 32,
+        num_workers = os.cpu_count(),
         dataset_name = "wiki",
     ):
         super().__init__()
@@ -69,10 +68,10 @@ class BertJapaneseDataModule(pl.LightningDataModule):
         input_ids, pred_indexes, true_word_ids, token_type_ids, attention_mask, sop_label = list(zip(*data_list))
 
         return (
-            torch.stack(input_ids),
-            torch.stack(pred_indexes),
+            torch.cat(input_ids, dim=0),
+            torch.cat(pred_indexes, dim=0),
             torch.cat(true_word_ids),
-            torch.stack(token_type_ids),
-            torch.stack(attention_mask),
+            torch.cat(token_type_ids, dim=0),
+            torch.cat(attention_mask, dim=0),
             torch.cat(sop_label),
         )

@@ -17,24 +17,13 @@ def main(args):
         name        =   'lightning_logs',
     )
 
-    # early_stop_callback = pl.callbacks.EarlyStopping(
-    #     monitor     =   'val_loss',
-    #     min_delta   =   0.00,
-    #     patience    =   1,
-    #     mode        =   'min'
-    # )
-
     trainer = pl.Trainer(
-        # profiler            =   args.profile and pl.profiler.AdvancedProfiler(output_filename = args.profiler_output_filepath),
         max_epochs          =   3,
         gpus                =   args.gpus,
         distributed_backend =   'dp',
         reload_dataloaders_every_epoch  =   True,
-        # weights_summary     =   'full',
         logger              =   logger,
-        # early_stop_callback =   args.early_stopping and early_stop_callback,
         checkpoint_callback =   False,
-        # deterministic     =   True,
     )
 
     exp = Experiment()

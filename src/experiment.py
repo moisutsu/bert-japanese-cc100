@@ -12,6 +12,7 @@ PRETRAINED_JAPANESE_BERT = "cl-tohoku/bert-base-japanese"
 class Experiment(pl.LightningModule):
     def __init__(
         self,
+        batch_size = 32,
         learning_rate=1e-5,
         pretrained_model_name = PRETRAINED_JAPANESE_BERT,
     ):
@@ -20,11 +21,12 @@ class Experiment(pl.LightningModule):
         self.learning_rate = learning_rate
         self.pretrained_model_name = pretrained_model_name
 
-        self.model = BertForPreTraining.from_pretrained(pretrained_model_name)
+        self.model = BertForPreTraining.from_pretrained(pretrained_model_name, return_dict=True)
         self.tokenizer = BertJapaneseTokenizer.from_pretrained(pretrained_model_name)
         self.dm = BertJapaneseDataModule(tokenizer=self.tokenizer)
 
-        self.criterion = nn.CrossEntropyLoss(ignore_index=self.tokenizer.pad_token_id)
+        self.criterion = nn.CrossEntropyLoss()
+
         self.save_hyperparameters()
 
 
@@ -35,17 +37,14 @@ class Experiment(pl.LightningModule):
 
     def forward(self, batch):
         input_ids, pred_indexes, true_word_ids, token_type_ids, attention_mask, sop_label = batch
-        print("input_ids", input_ids, input_ids.size())
-        print("pred_indexes", pred_indexes, pred_indexes.size())
-        print("true_word_ids", true_word_ids, true_word_ids.size())
-        print("token_type_ids", token_type_ids, token_type_ids.size())
-        print("attention_mask", attention_mask)
-        print("sop_label", sop_label)
 
-        exit(1)
+        outputs = self.model(input_ids, token_type_ids=token_type_ids, attention_mask=attention_mask)
+        pred = outputs.prediction_logits[pred_indexes]
+        sop = outputs.seq_relationship_logits
 
-        out = self.model()
-        loss = self.criterion(out)
+        pred_loss = self.criterion(pred, true_word_ids)
+        sop_loss = self.criterion(sop, sop_label)
+        loss = pred_loss + sop_loss
         return loss
 
 
