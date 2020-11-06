@@ -12,6 +12,7 @@ PRETRAINED_JAPANESE_BERT = "cl-tohoku/bert-base-japanese"
 class Experiment(pl.LightningModule):
     def __init__(
         self,
+        data_path,
         batch_size = 32,
         learning_rate=1e-5,
         pretrained_model_name = PRETRAINED_JAPANESE_BERT,
@@ -23,7 +24,7 @@ class Experiment(pl.LightningModule):
 
         self.model = BertForPreTraining.from_pretrained(pretrained_model_name, return_dict=True)
         self.tokenizer = BertJapaneseTokenizer.from_pretrained(pretrained_model_name)
-        self.dm = BertJapaneseDataModule(tokenizer=self.tokenizer)
+        self.dm = BertJapaneseDataModule(data_path=data_path, tokenizer=self.tokenizer)
 
         self.criterion = nn.CrossEntropyLoss()
 
