@@ -6,6 +6,7 @@ import random
 
 from collections import defaultdict
 from torch.utils.data import DataLoader
+from pathlib import Path
 
 from .wiki_dataset import WikiDataset
 
@@ -14,6 +15,7 @@ class BertJapaneseDataModule(pl.LightningDataModule):
     def __init__(
         self,
         tokenizer,
+        data_path,
         batch_size = 32,
         max_sequence_length = 512,
         num_workers = os.cpu_count(),
@@ -21,6 +23,8 @@ class BertJapaneseDataModule(pl.LightningDataModule):
     ):
         super().__init__()
         self.tokenizer = tokenizer
+        self.data_path = Path(data_path)
+
         self.batch_size = batch_size
         self.max_sequence_length = max_sequence_length
         self.num_workers = num_workers
@@ -29,7 +33,7 @@ class BertJapaneseDataModule(pl.LightningDataModule):
 
     def setup(self, stage=None):
         if self.dataset_name == "wiki":
-            self.dataset = WikiDataset(transform=self.transform)
+            self.dataset = WikiDataset(data_path=self.data_path, transform=self.transform)
 
 
     def train_dataloader(self):

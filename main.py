@@ -17,6 +17,7 @@ def main(args):
     )
 
     exp = Experiment(
+        data_path=args.data_path,
         batch_size=args.batch_size,
         learning_rate=args.learning_rate,
     )

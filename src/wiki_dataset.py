@@ -4,20 +4,20 @@ import pytorch_lightning as pl
 from torch.utils.data import Dataset
 
 from tqdm import tqdm
-from pathlib import Path
+
 
 class WikiDataset(Dataset):
     def __init__(
         self,
         transform,
-        datapath=Path("wiki_formated.txt"),
+        data_path,
     ):
         super().__init__()
 
         self.transform = transform
 
         self.dataset = []
-        with datapath.open() as f:
+        with data_path.open() as f:
             prev = next(f).strip()
             for line in tqdm(f):
                 sentence = line.strip()
