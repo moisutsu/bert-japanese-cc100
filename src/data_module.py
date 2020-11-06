@@ -17,7 +17,7 @@ class BertJapaneseDataModule(pl.LightningDataModule):
         tokenizer,
         data_path,
         batch_size = 32,
-        max_sequence_length = 512,
+        max_sequence_length = 64,
         num_workers = os.cpu_count(),
         dataset_name = "wiki",
     ):

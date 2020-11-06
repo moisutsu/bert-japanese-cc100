@@ -24,7 +24,7 @@ class Experiment(pl.LightningModule):
 
         self.model = BertForPreTraining.from_pretrained(pretrained_model_name, return_dict=True)
         self.tokenizer = BertJapaneseTokenizer.from_pretrained(pretrained_model_name)
-        self.dm = BertJapaneseDataModule(data_path=data_path, tokenizer=self.tokenizer)
+        self.dm = BertJapaneseDataModule(data_path=data_path, batch_size=batch_size, tokenizer=self.tokenizer)
 
         self.criterion = nn.CrossEntropyLoss()
 
