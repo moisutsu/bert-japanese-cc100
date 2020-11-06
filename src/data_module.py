@@ -15,12 +15,14 @@ class BertJapaneseDataModule(pl.LightningDataModule):
         self,
         tokenizer,
         batch_size = 32,
+        max_sequence_length = 512,
         num_workers = os.cpu_count(),
         dataset_name = "wiki",
     ):
         super().__init__()
         self.tokenizer = tokenizer
         self.batch_size = batch_size
+        self.max_sequence_length = max_sequence_length
         self.num_workers = num_workers
         self.dataset_name = dataset_name
 
@@ -47,7 +49,7 @@ class BertJapaneseDataModule(pl.LightningDataModule):
             first, second = second, first
         sop_label = torch.tensor([int(reverse)])
 
-        tokenized = self.tokenizer(first, second, max_length=512, padding="max_length", return_tensors="pt")
+        tokenized = self.tokenizer(first, second, max_length=self.max_sequence_length, padding="max_length", return_tensors="pt", truncation=True)
         input_ids, token_type_ids, attention_mask = tokenized.values()
         P = torch.rand(input_ids.size())
         pred_indexes = (P >= 0.85) * (input_ids != self.tokenizer.pad_token_id) * (input_ids != self.tokenizer.cls_token_id) * (input_ids != self.tokenizer.sep_token_id)
