@@ -27,7 +27,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Definition generation benchmark")
     parser.add_argument('--data_path', type=str, help='data path')
-    parser.add_argument('--save_path', type=str, default=".", help='model save path')
+    parser.add_argument('--save_path', type=str, default="./model_weights.pt", help='model save path')
     parser.add_argument('--gpus', type=str, default="0", help='')
     parser.add_argument('--distributed_backend', type=str, default="ddp", help='')
     parser.add_argument('--batch_size', type=int, default=32, help='')
