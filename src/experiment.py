@@ -61,5 +61,6 @@ class Experiment(pl.LightningModule):
     def load(cls, save_path, **kwargs):
         return cls.load_from_checkpoint(checkpoint_path=save_path, **kwargs)
 
+
     def fit(self, trainer):
         trainer.fit(self, self.dm)
