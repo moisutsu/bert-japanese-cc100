@@ -9,7 +9,7 @@ def main(args):
     pl.seed_everything(42)
 
     trainer = pl.Trainer(
-        max_epochs          =   3,
+        max_epochs          =   args.epochs,
         gpus                =   args.gpus,
         distributed_backend =   args.distributed_backend,
         reload_dataloaders_every_epoch  =   True,
@@ -32,6 +32,7 @@ if __name__ == "__main__":
     parser.add_argument('--gpus', type=str, default="0", help='')
     parser.add_argument('--distributed_backend', type=str, default="ddp", help='')
     parser.add_argument('--batch_size', type=int, default=32, help='')
+    parser.add_argument('--epochs', type=int, default=3, help='')
     parser.add_argument('--learning_rate', type=float, default=1e-4, help='')
 
     args = parser.parse_args()
